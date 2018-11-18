@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 export default class SideMenu extends Component {
   render() {
     return (
-      <View style={{ backgroundColor: '#989898', width: this.props.open ? '50%' : 0, height: this.props.open ? '100%' : 0, zIndex: 10}}>
+      <View style={{position: 'absolute', top: 40, left: 0, backgroundColor: '#989898', width: this.props.open ? '50%' : 0, height: this.props.open ? '100%' : 0, zIndex: 10}}>
         <Item title='Restaurant'>
             <SubItem title={'List'} onPress={() => this.props.setComponent('Restaurant_List')}/>
             <SubItem title={'Add new'} onPress={() => this.props.setComponent('Restaurant_Add')}/>

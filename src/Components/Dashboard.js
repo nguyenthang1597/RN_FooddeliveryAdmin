@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import TopBar from './TopBar';
 import SideMenu from './SideMenu';
 import RestaurantList from './Restaurant/List'
+import Detail from './Restaurant/Detail';
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -16,13 +17,14 @@ export default class Dashboard extends Component {
   setComponent = component => this.setState({component: component, open: false})
   render() {
     return (
-      <View style={{flex: 1}}>
-        <TopBar sideMenu={this.sideMenu}/>
-        <SideMenu open={this.state.open} setComponent={this.setComponent}/>
-        {
-          this.state.component === 'Restaurant_List' && <RestaurantList/>
-        }
-      </View>
+      <Detail/>
+      // <View style={{flex: 1, position: 'relative'}}>
+      //   <TopBar sideMenu={this.sideMenu}/>
+      //   <SideMenu open={this.state.open} setComponent={this.setComponent}/>
+      //   {
+      //     this.state.component === 'Restaurant_List' && <RestaurantList/>
+      //   }
+      // </View>
     )
   }
 }
