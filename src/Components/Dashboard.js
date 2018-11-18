@@ -17,14 +17,15 @@ export default class Dashboard extends Component {
   setComponent = component => this.setState({component: component, open: false})
   render() {
     return (
-      <Detail/>
-      // <View style={{flex: 1, position: 'relative'}}>
-      //   <TopBar sideMenu={this.sideMenu}/>
-      //   <SideMenu open={this.state.open} setComponent={this.setComponent}/>
-      //   {
-      //     this.state.component === 'Restaurant_List' && <RestaurantList/>
-      //   }
-      // </View>
+      <View style={{flex: 1, position: 'relative'}}>
+        <TopBar sideMenu={this.sideMenu}/>
+        <SideMenu open={this.state.open} setComponent={this.setComponent}/>
+        {
+          this.state.component === 'Restaurant_List' && <RestaurantList/>
+        }
+      </View>
     )
   }
 }
+
+      // {/* <Detail/> */}

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import {View, Text} from 'react-native'
+import { View, Text } from 'react-native'
 import LoginPage from './src/Components/LoginPage';
 import TopBar from './src/Components/TopBar';
 import Dashboard from './src/Components/Dashboard';
-import firebase from 'firebase';
+import firebase from '@firebase/app'
+import '@firebase/auth'
 
 var config = {
   apiKey: "AIzaSyCaswdFpvrdHXcsnq2Q7mRqjuWIgiFgyCI",
@@ -13,11 +14,13 @@ var config = {
   storageBucket: "fooddeliveryadmin-32946.appspot.com",
   messagingSenderId: "413834109009"
 };
+
 firebase.initializeApp(config);
+
 export default class App extends Component {
   render() {
     return (
-      <Dashboard/>
+      <Dashboard />
     )
   }
 }
