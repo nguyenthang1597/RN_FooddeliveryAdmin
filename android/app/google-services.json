@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "413834109009",
+    "firebase_url": "https://fooddeliveryadmin-32946.firebaseio.com",
+    "project_id": "fooddeliveryadmin-32946",
+    "storage_bucket": "fooddeliveryadmin-32946.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413834109009:android:0146280af0ce712c",
+        "android_client_info": {
+          "package_name": "com.fooddelivery_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413834109009-85spbpv362f5395ac9eua2mbfoh1tc3u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcVaLZMyRf39AHjgSVSzMwGZvnsuMo0ds"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
