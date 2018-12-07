@@ -4,6 +4,7 @@ import TopBar from './TopBar';
 import SideNav from './SideNav';
 import RestaurantList from './Restaurant/List'
 import FormAddRestaurant from './Restaurant/FormAddRestaurant'
+import OrderList from './Order/List';
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -26,6 +27,9 @@ export default class Dashboard extends Component {
         }
         {
           this.state.component === 'Restaurant_Add' && <FormAddRestaurant/>
+        }
+        {
+          this.state.component === 'Order_List' && <OrderList/>
         }
       </View>
     )

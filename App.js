@@ -12,7 +12,7 @@ import Detail from './src/Components/Restaurant/Detail'
 import firebase from 'react-native-firebase'
 const logger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
-
+import OrderDetail from './src/Components/Order/Detail';
 var config = {
   appId: "1:413834109009:android:0146280af0ce712c",
   apiKey: "AIzaSyCaswdFpvrdHXcsnq2Q7mRqjuWIgiFgyCI",
@@ -32,6 +32,7 @@ export default class App extends Component {
           <Scene key='Login' component={Login} initial="initial"/>
           <Scene key='Dashboard' component={Dashboard}/>
           <Scene key='Detail' component={Detail}/>
+          <Scene key='OrderDetail' component={OrderDetail} />
         </Stack>
       </Router>
     </Provider>);

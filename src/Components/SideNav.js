@@ -12,6 +12,9 @@ export default class SideNav extends Component {
         <Item title='Catagory'>
 
         </Item>
+        <Item title='Order'>
+          <SubItem title='List' onPress={() => this.props.setComponent('Order_List')} />
+        </Item>
       </View>
     )
   }

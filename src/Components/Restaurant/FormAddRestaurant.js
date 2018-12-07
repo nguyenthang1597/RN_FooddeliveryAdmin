@@ -135,12 +135,12 @@ class FormAddRestaurant extends Component {
                     <TextInput style={styles.input} onChangeText={text => this.handleTextChange('Number', text)}/>
                 </View>
                 <View style={styles.box}>
-                    <Text style={styles.title}>Gio mo cua: </Text>
-                    <TextInput style={[styles.input, {width: '50%'}]} onChangeText={text => this.handleTextChange('Number', text)}/>
+                    <Text style={styles.title}>Giờ mở cửa: </Text>
+                    <TextInput style={styles.input} onChangeText={text => this.handleTextChange('Opentime', text)}/>
                 </View>
                 <View style={styles.box}>
-                    <Text style={styles.title}>Gio dong cua: </Text>
-                    <TextInput style={[styles.input, {width: '50%'}]} onChangeText={text => this.handleTextChange('Number', text)}/>
+                    <Text style={styles.title}>Giờ đóng cửa: </Text>
+                    <TextInput style={styles.input} onChangeText={text => this.handleTextChange('CloseTime', text)}/>
                 </View>
 
                 <Text style={styles.title}>Hình ảnh: </Text>
@@ -151,7 +151,7 @@ class FormAddRestaurant extends Component {
                   this.state.pickedImage && <Image style={{height: 200, borderRadius: 10, marginTop: 10 }} source={{uri: this.state.pickedImage.uri}}/>
                 }
                 <TouchableOpacity style={{ height: 45, width: 146, backgroundColor: '#5E35B1', borderRadius: 50, justifyContent: 'center', alignItems: "center", marginLeft: 'auto', marginRight: 'auto', bottom: 5, position: 'absolute', left: '50%', transform: [{translateX: -73}] }} onPress={() => this.handleSubmit()}>
-                    <Text style={{color: 'white', fontSize: 16}}>Them moi</Text>
+                    <Text style={{color: 'white', fontSize: 16}}>Thêm mới</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -168,8 +168,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(0,0,0,0.6)',
         width: '100%',
-        marginLeft: 10
-
+        marginLeft: 10,
+        height: 50
     },
     districtStyle: {
         flex: 1,
