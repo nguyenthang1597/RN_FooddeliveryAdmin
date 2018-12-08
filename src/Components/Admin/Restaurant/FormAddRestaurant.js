@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Picker, Alert } from 'react-native';
 import ImagePicker from "react-native-image-picker";
+
+import UploadPicture from '../../../API/UploadPicture'
+import UpdateRestaurant from '../../../API/UpdateRestaurant'
+import AddRestaurant from '../../../API/AddRestaurant'
+
 class FormAddRestaurant extends Component {
     constructor(props) {
         super(props);
@@ -46,17 +51,35 @@ class FormAddRestaurant extends Component {
       return true;
     }
 
-    handleSubmit = () => {
+    handleSubmit = async () => {
       let valid = this.checkInfo();
 
       if(!valid)
         Alert.alert('Error', 'Vui long nhap day du thong tin')
-
+      else{
+        return UploadPicture(this.state.pickedImage.uri)
+        .then(url => {
+          let restaurant = {
+            Name: this.state.Name,
+            District: this.state.District,
+            Ward: this.state.Ward,
+            Street: this.state.Street,
+            Number: this.state.Number,
+            PhotoUrl: url,
+          }
+          console.log(restaurant);
+          return AddRestaurant(restaurant);
+        })
+        .then(res => {
+          if(res.status !== 200){
+            Alert('Thêm không thành công');
+          }
+          else{
+            Alert('Thêm thành công');
+          }
+        })
+      }
     }
-
-
-
-
     pickImageHandler = () => {
       ImagePicker.showImagePicker({
         title: "Pick an Image",

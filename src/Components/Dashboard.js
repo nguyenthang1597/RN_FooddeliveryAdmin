@@ -1,24 +1,22 @@
 import React, { Component } from 'react'
 import {View} from 'react-native'
 import TopBar from './TopBar';
-import SideNav from './SideNav';
-import RestaurantList from './Restaurant/List'
-import FormAddRestaurant from './Restaurant/FormAddRestaurant'
-import OrderList from './Order/List';
+import SideNav from '../Containers/SideNav';
+import RestaurantList from '../Containers/Restaurants';
+import FormAddRestaurant from './Admin/Restaurant/FormAddRestaurant'
+import OrderList from './Admin/Order/List';
+import CategoryList from './Admin/Category/List'
 export default class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      component: ''
-    }
+  state = {
+    open: false,
+    component: ''
   }
   sideMenu = () => this.setState({open: !this.state.open})
 
   setComponent = component => this.setState({component: component, open: false})
   render() {
     return (
-      // <Detail/>
+
       <View style={{flex: 1, position: 'relative', zIndex: 0}}>
         <TopBar sideMenu={this.sideMenu}/>
         <SideNav open={this.state.open} setComponent={this.setComponent}/>
@@ -30,6 +28,9 @@ export default class Dashboard extends Component {
         }
         {
           this.state.component === 'Order_List' && <OrderList/>
+        }
+        {
+          this.state.component === 'Category_List' && <CategoryList/>
         }
       </View>
     )

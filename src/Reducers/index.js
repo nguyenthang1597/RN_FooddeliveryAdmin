@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux'
-import Authentication from './Authentication';Authentication
-
+import Authentication from './Authentication';
+import Restaurants from './Restaurants';
 export default combineReducers({
-  Authentication
+  Authentication,
+  Restaurants
 })

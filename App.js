@@ -8,11 +8,11 @@ import thunk from 'redux-thunk';
 import {Provider} from 'react-redux'
 import {Router, Stack, Scene, ActionConst} from 'react-native-router-flux';
 import {createLogger} from 'redux-logger';
-import Detail from './src/Components/Restaurant/Detail'
+import Detail from './src/Components/Admin/Restaurant/Detail'
 import firebase from 'react-native-firebase'
 const logger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
-import OrderDetail from './src/Components/Order/Detail';
+import OrderDetail from './src/Components/Admin/Order/Detail';
 var config = {
   appId: "1:413834109009:android:0146280af0ce712c",
   apiKey: "AIzaSyCaswdFpvrdHXcsnq2Q7mRqjuWIgiFgyCI",
