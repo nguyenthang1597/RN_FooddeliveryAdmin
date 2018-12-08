@@ -19,12 +19,16 @@ import RNFetchBlob from 'react-native-fetch-blob'
 import firebase from 'react-native-firebase';
 const Blob = RNFetchBlob.polyfill.Blob;
 window.Blob = Blob;
+import UploadPicture from '../../../API/UploadPicture'
+import UpdateRestaurant from '../../../API/UpdateRestaurant'
+
 
 export default class Detail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       restaurant: {},
+      PhotoUrl: null,
       districts: [],
       wards: [],
       pickedImage: null,
@@ -116,35 +120,26 @@ export default class Detail extends Component {
 
   updateInfo = async () => {
     if (this.state.pickedImage) {
-      const uploadUri = this.state.pickedImage.uri;
-      const imageRef = firebase.storage().ref('images/restaurant').child(`${this.props.id}`);
-      return imageRef.put(uploadUri, {contentType: 'application/octet-stream'}).then(() => imageRef.getDownloadURL()).then(url => {
+      UploadPicture(this.state.pickedImage.uri)
+      .then(url => {
         let restaurant = {
           ...this.state.restaurant,
           PhotoUrl: url
         };
-        console.log(restaurant)
-        return fetch(`https://fooddeliveryadmin.herokuapp.com/restaurant/${this.props.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(restaurant)
-        })
-      }).then(res => {
-        return res.json();
-      }).then(json => {
+        return UpdateRestaurant(restaurant);
+      }).then(res => res.json())
+      .then(json => {
         Alert.alert('Success', 'Update info success');
-      }).catch(err => console.error(err))
-    } else {
+      })
+      .catch(err => {
+        Alert('Cập nhật không thành công');
+
+      })
+      }
+    else {
       let restaurant = this.state.restaurant;
-      return fetch(`https://fooddeliveryadmin.herokuapp.com/restaurant/${this.props.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(restaurant)
-      }).then(res => {
+      UpdateRestaurant(restaurant)
+      .then(res => {
         return res.json();
       }).then(json => Alert.aler('Success', 'Update info success')).catch(err => console.log(err))
     }

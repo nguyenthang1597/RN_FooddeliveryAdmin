@@ -1,4 +1,4 @@
-import {REQUEST_AUTH, AUTH_SUCCESS, AUTH_FAILURE} from '../Actions/Authentication'
+import {REQUEST_AUTH, AUTH_SUCCESS, AUTH_FAILURE, LOGOUT} from '../Actions/Authentication'
 
 const initState = {
   isAuthenticating: false,
@@ -14,6 +14,8 @@ const Authentication = (state = initState, action) => {
       return {...state, isAuthenticating: false, isAuthenticated: true, token: action.data.Token}
     case AUTH_FAILURE:
       return {...state, isAuthenticated: false, isAuthenticating: false, token: null}
+    case LOGOUT:
+      return initState;
     default:
       return state;
   }

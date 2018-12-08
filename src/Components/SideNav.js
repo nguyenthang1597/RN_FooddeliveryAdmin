@@ -1,25 +1,28 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-export default class SideNav extends Component {
-  render() {
-    return (
-      <View style={{position: 'absolute', top: 40, left: 0, backgroundColor: 'red', width: this.props.open ? '50%' : 0, height: this.props.open ? '100%' : 0, zIndex: 99}}>
+import {Actions} from 'react-native-router-flux'
+const SideNav  = ({setComponent, open, logout}) => {
+  return (
+    <View style={{position: 'absolute', top: 40, left: 0,backgroundColor: '#6200EE', width: open ? '50%' : 0, height: open ? '100%' : 0, zIndex: 99, borderTopWidth: 1, borderTopColor: 'white'}}>
         <Item title='Restaurant'>
-            <SubItem title={'List'} onPress={() => this.props.setComponent('Restaurant_List')}/>
-            <SubItem title={'Add new'} onPress={() => this.props.setComponent('Restaurant_Add')}/>
+            <SubItem title={'List'} onPress={() => setComponent('Restaurant_List')}/>
+            <SubItem title={'Add new'} onPress={() => setComponent('Restaurant_Add')}/>
         </Item>
         <Item title='Catagory'>
-
+            <SubItem title={'List'} onPress={() => setComponent('Category_List')}/>
         </Item>
         <Item title='Order'>
-          <SubItem title='List' onPress={() => this.props.setComponent('Order_List')} />
+          <SubItem title='List' onPress={() => setComponent('Order_List')} />
         </Item>
-      </View>
-    )
-  }
+        <TouchableOpacity  style={{position: 'relative', bottom: 0, top: '70%'}} onPress={() => {logout(); Actions.Login({type: "reset"})}}>
+          <Text style={{marginLeft: 10, fontSize: 20, color: 'white'}}>Đăng xuất</Text>
+        </TouchableOpacity>
+    </View>
+  )
 }
 
+export default SideNav;
 class Item extends Component {
   constructor(props) {
     super(props);
@@ -33,16 +36,15 @@ class Item extends Component {
   render() {
     const {title} = this.props;
     return (
-      <View style={{ position: 'relative', marginTop: 10, marginLeft: 10, position: 'relative' }}>
+      <View style={{ position: 'relative', marginTop: 10, marginLeft: 10}}>
         <TouchableOpacity style={{flexDirection: 'row', display: 'flex'}} onPress={this.onClick}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{title}</Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>{title}</Text>
           {
-            this.props.children ? this.state.click ? <Icon name='minus' size={20} style={{ left: 10, top: 5 }} /> : <Icon name='plus' size={20} style={{ left: 10, top: 5 }}/> : null
+            this.props.children ? this.state.click ? <Icon name='minus' size={20} style={{ left: 10, top: 5 }} color='white'/> : <Icon name='plus' size={20} style={{ left: 10, top: 5 }} color='white'/> : null
           }
         </TouchableOpacity>
         {
           this.state.click && <View style={{marginLeft: 30}}>{this.props.children}</View>
-
         }
       </View>
     )

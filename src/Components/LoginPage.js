@@ -24,7 +24,6 @@ export default class LoginPage extends Component {
   }
 
   render() {
-
     return (
       <ImageBackground source={loginBackground} style={{ width: '100%', height: '100%' }}>
         <View style={style.loginContainer}>
