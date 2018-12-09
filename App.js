@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {View} from 'react-native';
 import Login from './src/Containers/Login';
 import Dashboard from './src/Components/Dashboard';
 import {createStore, applyMiddleware} from 'redux';
@@ -23,15 +24,20 @@ var config = {
 };
 firebase.initializeApp(config);
 
+import DeliverOrderList from './src/Components/Deliver/Order/List'
+import DeliverOrderDetail from './src/Components/Deliver/Order/Detail'
+
 export default class App extends Component {
   render() {
     return (<Provider store={store}>
       <Router>
         <Stack key='root' hideNavBar={true}>
           <Scene key='Login' component={Login}/>
-          <Scene key='Dashboard' component={Dashboard} initial/>
+          <Scene key='Dashboard' component={Dashboard} />
+          <Scene key='DeliverOderList' component={DeliverOrderList} initial/>
           <Scene key='Detail' component={Detail}/>
           <Scene key='OrderDetail' component={OrderDetail} title="Danh sách các món" hideNavBar={false}/>
+          <Scene key='DeliverOrderDetail' component={DeliverOrderDetail} title="Chi tiết đơn hàng" hideNavBar={false}/>
         </Stack>
       </Router>
     </Provider>);

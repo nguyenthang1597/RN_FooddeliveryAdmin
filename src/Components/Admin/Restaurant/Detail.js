@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   Alert,
   Keyboard,
-  Dimensions
+  Dimensions,
 } from 'react-native'
 import ImagePicker from "react-native-image-picker";
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -42,7 +42,8 @@ export default class Detail extends Component {
       foodPrice: null,
       foodPhotoUrl: null,
       id: props.navigation.state.params.id,
-      modalTop: '20%'
+      modalTop: '20%',
+      isAddFood: false,
     }
   }
 
@@ -174,7 +175,7 @@ export default class Detail extends Component {
     }
 
     if (this.state.foodPhotoUrl) {
-      this.setState({ visible: false })
+      this.setState({ isAddFood: true })
       let uploadUri = this.state.foodPhotoUrl.uri;
       const imageRef = firebase.storage().ref('images/food').child(`${(new Date()).getTime()}`);
 
@@ -201,7 +202,8 @@ export default class Detail extends Component {
           loading: true,
           foodName: '',
           foodPrice: '',
-          foodPhotoUrl: ''
+          foodPhotoUrl: '',
+          isAddFood: false
         }, () => this.update())
       }).catch(err => {
         Alert.alert('Error', "Add failure")
@@ -210,7 +212,8 @@ export default class Detail extends Component {
           loading: true,
           foodName: '',
           foodPrice: '',
-          foodPhotoUrl: ''
+          foodPhotoUrl: '',
+          isAddFood: false
         }, () => this.update())
       })
     }
@@ -420,9 +423,10 @@ export default class Detail extends Component {
                   </TouchableOpacity>
                 </View>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                  { this.state.isAddFood ? <ActivityIndicator size={"small"} color="black"/>: 
                   <TouchableOpacity onPress = {() => this.addFood()}>
                     <Text style={{ borderWidth: 1, fontSize: 18, padding: 10, paddingLeft: 40, paddingRight: 40, borderRadius: 50, backgroundColor: 'orange' }}>Add</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity>}
                 </View>
               </View>
             </View>
