@@ -7,6 +7,8 @@ import FormAddRestaurant from './Admin/Restaurant/FormAddRestaurant'
 import OrderList from './Admin/Order/List';
 import CategoryList from './Admin/Category/List';
 import AdmimDashboard from './Admin/Dashboard'
+import SubcribeNewOrder from '../API/SubcribeNewOrder'
+import PushNotification from 'react-native-push-notification';
 export default class Dashboard extends Component {
   state = {
     open: false,
@@ -15,6 +17,21 @@ export default class Dashboard extends Component {
   sideMenu = () => this.setState({open: !this.state.open})
 
   setComponent = component => this.setState({component: component, open: false})
+  componentDidMount(){
+    PushNotification.configure({
+        onNotification: function(notification) {
+            console.log( 'NOTIFICATION:', notification );
+        },
+        popInitialNotification: true,
+    });
+    SubcribeNewOrder(() => {
+      alert('Có đơn hàng mới')
+      console.log('co don hang moi');
+      PushNotification.localNotification({
+        message: 'Có đơn hàng mới'
+      });
+    })
+  }
   render() {
     return (
 

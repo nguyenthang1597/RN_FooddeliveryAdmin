@@ -13,6 +13,7 @@ import firebase from 'react-native-firebase'
 const logger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 import OrderDetail from './src/Components/Admin/Order/Detail';
+import PushNotification from 'react-native-push-notification';
 var config = {
   appId: "1:413834109009:android:0146280af0ce712c",
   apiKey: "AIzaSyCaswdFpvrdHXcsnq2Q7mRqjuWIgiFgyCI",
@@ -23,6 +24,10 @@ var config = {
   messagingSenderId: "413834109009"
 };
 firebase.initializeApp(config);
+
+
+
+
 
 export default class App extends Component {
   render() {
