@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   Alert,
   Keyboard,
-  Dimensions
+  Dimensions,
 } from 'react-native'
 import ImagePicker from "react-native-image-picker";
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -24,7 +24,7 @@ window.Blob = Blob;
 import UploadPicture from '../../../API/UploadPicture'
 import UpdateRestaurant from '../../../API/UpdateRestaurant'
 
-const {height: HEIGHT} = Dimensions.get('window')
+const { height: HEIGHT, width: WIDTH } = Dimensions.get('window')
 
 export default class Detail extends Component {
   constructor(props) {
@@ -42,7 +42,8 @@ export default class Detail extends Component {
       foodPrice: null,
       foodPhotoUrl: null,
       id: props.navigation.state.params.id,
-      modalTop: '20%'
+      modalTop: '20%',
+      isAddFood: false,
     }
   }
 
@@ -64,7 +65,7 @@ export default class Detail extends Component {
     })
   }
 
-  componentWillMount () {
+  componentWillMount() {
     this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
     this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
   }
@@ -90,9 +91,9 @@ export default class Detail extends Component {
   }
 
   keyboardWillShow = () => {
-      this.setState({
-        modalTop: '10%'
-      })
+    this.setState({
+      modalTop: '10%'
+    })
   };
 
   keyboardWillHide = () => {
@@ -169,7 +170,12 @@ export default class Detail extends Component {
   }
 
   addFood = () => {
+    if(this.state.foodName === '' || this.state.foodPrice === '') {
+      return;
+    }
+
     if (this.state.foodPhotoUrl) {
+      this.setState({ isAddFood: true })
       let uploadUri = this.state.foodPhotoUrl.uri;
       const imageRef = firebase.storage().ref('images/food').child(`${(new Date()).getTime()}`);
 
@@ -187,13 +193,17 @@ export default class Detail extends Component {
           body: JSON.stringify(food)
         })
       }).then(res => {
-        Alert.alert('Success', "Add success")
+        if(res.status === 200)
+          Alert.alert('Success', "Add success")
+        else
+          Alert.alert('Fail', "Add fail")
         this.setState({
           visible: false,
           loading: true,
           foodName: '',
           foodPrice: '',
-          foodPhotoUrl: ''
+          foodPhotoUrl: '',
+          isAddFood: false
         }, () => this.update())
       }).catch(err => {
         Alert.alert('Error', "Add failure")
@@ -202,7 +212,8 @@ export default class Detail extends Component {
           loading: true,
           foodName: '',
           foodPrice: '',
-          foodPhotoUrl: ''
+          foodPhotoUrl: '',
+          isAddFood: false
         }, () => this.update())
       })
     }
@@ -375,43 +386,48 @@ export default class Detail extends Component {
         <FlatList horizontal={true} data={this.state.menu} renderItem={({ item }) => <ItemList Name={item.Name} Price={item.Price} PhotoUrl={item.PhotoUrl} />} keyExtractor={(i, index) => index.toString()} />
         <Modal transparent={true} visible={this.state.visible} animationType='slide' onRequestClose={() => this.setState({ visible: false })}>
           <View style={{
-            backgroundColor: 'white',
-            width: '80%',
-            height: HEIGHT /2,
+            justifyContent:'center',
+            alignItems: 'center',
             top: this.state.modalTop,
-            left: '10%',
-            elevation: 5,
-            position: 'relative',
-            borderStyle: 'solid',
-            borderWidth: 1
           }}>
-            <TouchableOpacity style={{
-              width: 24,
-              height: 24,
-              top: '2%',
-              right: '2%',
-              position: 'absolute',
-              backgroundColor: 'red',
-              borderRadius: 12,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }} onPress={() => this.setState({ visible: false })}>
-              <Icon name='times' size={20} color='white' />
-            </TouchableOpacity>
-            <View style={{ flex: 1, padding: 5, marginTop: 28 }}>
-              <View style={{ flex: 3}}>
-                <TextInput style={Style.input} placeholder={"Tên món"} placeholderTextColor={'black'}/>
-                <TextInput style={Style.input} placeholder={"Giá tiền"} placeholderTextColor={'black'}/>
-              </View>
-              <View style={{ flex: 3, alignItems: 'center', justifyContent: "center" }}>
-                <TouchableOpacity>
-                  <Icon name='camera' size={35} />
-                </TouchableOpacity>
-              </View>
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <TouchableOpacity>
-                  <Text style={{borderWidth: 1, fontSize: 18, padding: 10, paddingLeft: 40, paddingRight: 40, borderRadius: 50, backgroundColor: 'orange'}}>Add</Text>
-                </TouchableOpacity>
+            <View style={{
+              backgroundColor: 'white',
+              width: WIDTH - 60,
+              height: HEIGHT / 2,
+              elevation: 5,
+              position: 'relative',
+              borderStyle: 'solid',
+              borderWidth: 1,
+            }}>
+              <TouchableOpacity style={{
+                width: 24,
+                height: 24,
+                top: '2%',
+                right: '2%',
+                position: 'absolute',
+                backgroundColor: 'red',
+                borderRadius: 12,
+                alignItems: 'center',
+                justifyContent: 'center'
+              }} onPress={() => this.setState({ visible: false })}>
+                <Icon name='times' size={20} color='white' />
+              </TouchableOpacity>
+              <View style={{ flex: 1, padding: 5, marginTop: 28 }}>
+                <View style={{ flex: 3 }}>
+                  <TextInput style={Style.input} placeholder={"Tên món"} placeholderTextColor={'black'} onChangeText={(value) => this.setState({ foodName: value })} />
+                  <TextInput style={Style.input} placeholder={"Giá tiền"} placeholderTextColor={'black'} onChangeText={(value) => this.setState({ foodPrice: value })} />
+                </View>
+                <View style={{ flex: 3, alignItems: 'center', justifyContent: "center" }}>
+                  <TouchableOpacity style={{alignItems: 'center'}} onPress={() => this.pickImageFoodHandler()} >
+                    {(this.state.foodPhotoUrl === null) ? <Icon name='camera' size={35} /> : <Image style={{ width: WIDTH - 65, height: '100%', }} source={{ uri: this.state.foodPhotoUrl.uri }} />}
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                  { this.state.isAddFood ? <ActivityIndicator size={"small"} color="black"/>: 
+                  <TouchableOpacity onPress = {() => this.addFood()}>
+                    <Text style={{ borderWidth: 1, fontSize: 18, padding: 10, paddingLeft: 40, paddingRight: 40, borderRadius: 50, backgroundColor: 'orange' }}>Add</Text>
+                  </TouchableOpacity>}
+                </View>
               </View>
             </View>
           </View>
