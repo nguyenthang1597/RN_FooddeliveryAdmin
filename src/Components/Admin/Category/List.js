@@ -23,6 +23,7 @@ class CategoryList extends React.Component {
             horizontal={false}
             renderItem={({item, index}) => <ListItem item={item} />}
             keyExtractor={(item, index) => index.toString()}
+            ListHeaderComponent={() => <View><Text>Stt</Text><Text>Ten</Text></View>}
           />
         }
       </View>)
