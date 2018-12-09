@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
@@ -11,7 +11,9 @@ import {
   ImageBackground,
   Modal,
   ActivityIndicator,
-  Alert
+  Alert,
+  Keyboard,
+  Dimensions
 } from 'react-native'
 import ImagePicker from "react-native-image-picker";
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -22,6 +24,7 @@ window.Blob = Blob;
 import UploadPicture from '../../../API/UploadPicture'
 import UpdateRestaurant from '../../../API/UpdateRestaurant'
 
+const {height: HEIGHT} = Dimensions.get('window')
 
 export default class Detail extends Component {
   constructor(props) {
@@ -38,7 +41,8 @@ export default class Detail extends Component {
       foodName: null,
       foodPrice: null,
       foodPhotoUrl: null,
-      id: props.navigation.state.params.id
+      id: props.navigation.state.params.id,
+      modalTop: '20%'
     }
   }
 
@@ -56,11 +60,18 @@ export default class Detail extends Component {
     }, async () => {
       let resWard = await fetch(`https://fooddeliveryadmin.herokuapp.com/address/ward?d=${this.state.restaurant.District}`);
       let wards = await resWard.json();
-      this.setState({wards, loading: false})
+      this.setState({ wards, loading: false })
     })
   }
 
+  componentWillMount () {
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+  }
+
   async componentDidMount() {
+    this.keyboardWillShowSub.remove();
+    this.keyboardWillHideSub.remove();
     let res = await fetch(`https://fooddeliveryadmin.herokuapp.com/restaurant/${this.props.id}`);
     let data = await res.json();
     let resDistrict = await fetch('https://fooddeliveryadmin.herokuapp.com/address/districts');
@@ -74,9 +85,21 @@ export default class Detail extends Component {
     }, async () => {
       let resWard = await fetch(`https://fooddeliveryadmin.herokuapp.com/address/ward?d=${this.state.restaurant.District}`);
       let wards = await resWard.json();
-      this.setState({wards, loading: false})
+      this.setState({ wards, loading: false })
     })
   }
+
+  keyboardWillShow = () => {
+      this.setState({
+        modalTop: '10%'
+      })
+  };
+
+  keyboardWillHide = () => {
+    this.setState({
+      modalTop: '20%'
+    })
+  };
 
   pickImageHandler = () => {
     ImagePicker.showImagePicker({
@@ -89,7 +112,7 @@ export default class Detail extends Component {
       } else if (res.error) {
         console.log("Error", res.error);
       } else {
-        this.setState({pickedImage: res});
+        this.setState({ pickedImage: res });
       }
     });
   }
@@ -115,42 +138,42 @@ export default class Detail extends Component {
   handleChange = (text, name) => {
     let res = this.state.restaurant;
     res[name] = text;
-    this.setState({restaurant: res})
+    this.setState({ restaurant: res })
   }
 
   updateInfo = async () => {
     if (this.state.pickedImage) {
       UploadPicture(this.state.pickedImage.uri)
-      .then(url => {
-        let restaurant = {
-          ...this.state.restaurant,
-          PhotoUrl: url
-        };
-        return UpdateRestaurant(restaurant);
-      }).then(res => res.json())
-      .then(json => {
-        Alert.alert('Success', 'Update info success');
-      })
-      .catch(err => {
-        Alert('Cập nhật không thành công');
+        .then(url => {
+          let restaurant = {
+            ...this.state.restaurant,
+            PhotoUrl: url
+          };
+          return UpdateRestaurant(restaurant);
+        }).then(res => res.json())
+        .then(json => {
+          Alert.alert('Success', 'Update info success');
+        })
+        .catch(err => {
+          Alert('Cập nhật không thành công');
 
-      })
-      }
+        })
+    }
     else {
       let restaurant = this.state.restaurant;
       UpdateRestaurant(restaurant)
-      .then(res => {
-        return res.json();
-      }).then(json => Alert.aler('Success', 'Update info success')).catch(err => console.log(err))
+        .then(res => {
+          return res.json();
+        }).then(json => Alert.aler('Success', 'Update info success')).catch(err => console.log(err))
     }
   }
 
   addFood = () => {
     if (this.state.foodPhotoUrl) {
       let uploadUri = this.state.foodPhotoUrl.uri;
-      const imageRef = firebase.storage().ref('images/food').child(`${ (new Date()).getTime()}`);
+      const imageRef = firebase.storage().ref('images/food').child(`${(new Date()).getTime()}`);
 
-      return imageRef.put(uploadUri, {contentType: 'application/octet-stream'}).then(() => imageRef.getDownloadURL()).then(url => {
+      return imageRef.put(uploadUri, { contentType: 'application/octet-stream' }).then(() => imageRef.getDownloadURL()).then(url => {
         let food = {
           Name: this.state.foodName,
           Price: Number.parseInt(this.state.foodPrice),
@@ -185,317 +208,257 @@ export default class Detail extends Component {
     }
   }
 
-    handleDistrictChange = async (value) => {
-      let resWard = await fetch(`https://fooddeliveryadmin.herokuapp.com/address/ward?d=${value}`);
-      let wards = await resWard.json();
-      this.setState({wards})
-    }
-    render() {
-      const {loading} = this.state;
+  handleDistrictChange = async (value) => {
+    let resWard = await fetch(`https://fooddeliveryadmin.herokuapp.com/address/ward?d=${value}`);
+    let wards = await resWard.json();
+    this.setState({ wards })
+  }
+  render() {
+    const { loading } = this.state;
 
-      if (loading)
-        return (<View style={{
-            width: '100%',
-            height: '100%',
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
-          <ActivityIndicator size='large' color='black'/>
-        </View>)
+    if (loading)
+      return (<View style={{
+        width: '100%',
+        height: '100%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <ActivityIndicator size='large' color='black' />
+      </View>)
 
-      return (<View style={Style.container}>
-        <TouchableOpacity style={{
-            width: '100%',
-            height: 200,
-            position: 'relative',
-            backgroundColor: '#cecece'
-          }} onPress={this.pickImageHandler}>
-          <Image source={this.state.pickedImage
-              ? this.state.pickedImage
-              : ({uri: this.state.restaurant.PhotoUrl})} style={{
-              height: 180,
-              width: 180,
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: [
-                {
-                  translateX: -90
-                }, {
-                  translateY: -90
-                }
-              ],
-              borderRadius: 90,
-              borderWidth: 2,
-              borderStyle: 'solid',
-              borderColor: 'white'
-            }}/>
-        </TouchableOpacity>
+    return (<View style={Style.container}>
+      <TouchableOpacity style={{
+        width: '100%',
+        height: 200,
+        position: 'relative',
+        backgroundColor: '#cecece'
+      }} onPress={this.pickImageHandler}>
+        <Image source={this.state.pickedImage
+          ? this.state.pickedImage
+          : ({ uri: this.state.restaurant.PhotoUrl })} style={{
+            height: 180,
+            width: 180,
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: [
+              {
+                translateX: -90
+              }, {
+                translateY: -90
+              }
+            ],
+            borderRadius: 90,
+            borderWidth: 2,
+            borderStyle: 'solid',
+            borderColor: 'white'
+          }} />
+      </TouchableOpacity>
+      <View style={{
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <TextInput value={this.state.restaurant.Name} style={{
+          fontSize: 16
+        }} name='Name' onChangeText={text => this.handleChange(text, 'Name')} placeholder='Restaurant Name' />
         <View style={{
-            justifyContent: 'center',
-            alignItems: 'center'
+          flexDirection: 'row',
+          width: '100%',
+          height: 40,
+          marginTop: 10,
+          borderBottomWidth: 1,
+          borderBottomColor: 'black',
+          borderStyle: 'solid'
+        }}>
+          <Picker style={{
+            width: '48%',
+            height: 40,
+            marginLeft: '1%',
+            marginRight: '1%'
+          }} selectedValue={this.state.restaurant.District} onValueChange={(itemValue, index) => {
+            this.handleChange(itemValue, 'District');
+            this.handleDistrictChange(itemValue)
           }}>
-          <TextInput value={this.state.restaurant.Name} style={{
-              fontSize: 16
-            }} name='Name' onChangeText={text => this.handleChange(text, 'Name')} placeholder='Restaurant Name'/>
-          <View style={{
-              flexDirection: 'row',
-              width: '100%',
-              height: 40,
-              marginTop: 10,
-              borderBottomWidth: 1,
-              borderBottomColor: 'black',
-              borderStyle: 'solid'
-            }}>
-            <Picker style={{
-                width: '48%',
-                height: 40,
-                marginLeft: '1%',
-                marginRight: '1%'
-              }} selectedValue={this.state.restaurant.District} onValueChange={(itemValue, index) => {
-                this.handleChange(itemValue, 'District');
-                this.handleDistrictChange(itemValue)
-              }}>
-              {this.state.districts.map((item, index) => <Picker.Item key={index} label={item.name} value={item.name}/>)}
-            </Picker>
-            <Picker style={{
-                width: '48%',
-                height: 40,
-                marginLeft: '1%',
-                marginRight: '1%',
-                borderBottomWidth: 1,
-                borderBottomColor: 'black'
-              }} onValueChange={(itemValue, index) => this.handleChange(itemValue, 'Ward')} selectedValue={this.state.restaurant.Ward}>
-              {this.state.wards.map((item, index) => <Picker.Item key={index} label={item.name} value={item.name}/>)}
-            </Picker>
-          </View>
-          <View style={{
-              flexDirection: 'row',
-              width: '100%',
-              height: 40,
-              marginBottom: 5
-            }}>
-            <TextInput style={{
-                width: '48%',
-                height: 40,
-                marginLeft: '1%',
-                marginRight: '1%'
-              }} value={this.state.restaurant.Street} onChangeText={text => this.handleChange(text, 'Street')} placeholder="Street"/>
-            <TextInput style={{
-                width: '48%',
-                height: 40,
-                marginLeft: '1%',
-                marginRight: '1%'
-              }} value={this.state.restaurant.Number} onChangeText={text => this.handleChange(text, 'Number')} placeholder='Number'/>
-          </View>
-          <View style={{
-              flexDirection: 'row',
-              width: '100%',
-              height: 40,
-              marginTop: 5,
-              borderBottomWidth: 1,
-              borderBottomColor: 'black',
-              borderStyle: 'solid'
-            }}>
-            <TextInput style={{
-                width: '48%',
-                height: 40,
-                marginLeft: '1%',
-                marginRight: '1%'
-              }} value={this.state.restaurant.OpenTime} onChangeText={text => this.handleChange(text, 'OpenTime')} placeholder="Open time"/>
-            <TextInput style={{
-                width: '48%',
-                height: 40,
-                marginLeft: '1%',
-                marginRight: '1%'
-              }} value={this.state.restaurant.CloseTime} onChangeText={text => this.handleChange(text, 'CloseTime')} placeholder="Close time"/>
-          </View>
+            {this.state.districts.map((item, index) => <Picker.Item key={index} label={item.name} value={item.name} />)}
+          </Picker>
+          <Picker style={{
+            width: '48%',
+            height: 40,
+            marginLeft: '1%',
+            marginRight: '1%',
+            borderBottomWidth: 1,
+            borderBottomColor: 'black'
+          }} onValueChange={(itemValue, index) => this.handleChange(itemValue, 'Ward')} selectedValue={this.state.restaurant.Ward}>
+            {this.state.wards.map((item, index) => <Picker.Item key={index} label={item.name} value={item.name} />)}
+          </Picker>
         </View>
-        <TouchableOpacity style={{
-            width: 120,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            height: 50,
-            borderRadius: 20,
-            marginTop: 10,
-            backgroundColor: 'green',
-            marginBottom: 10
-          }} onPress={() => this.updateInfo()}>
-          <Text style={{
-              lineHeight: 50,
-              textAlign: 'center'
-            }}>Update</Text>
-        </TouchableOpacity>
         <View style={{
-            width: '100%'
-          }}>
+          flexDirection: 'row',
+          width: '100%',
+          height: 40,
+          marginBottom: 5
+        }}>
+          <TextInput style={{
+            width: '48%',
+            height: 40,
+            marginLeft: '1%',
+            marginRight: '1%'
+          }} value={this.state.restaurant.Street} onChangeText={text => this.handleChange(text, 'Street')} placeholder="Street" />
+          <TextInput style={{
+            width: '48%',
+            height: 40,
+            marginLeft: '1%',
+            marginRight: '1%'
+          }} value={this.state.restaurant.Number} onChangeText={text => this.handleChange(text, 'Number')} placeholder='Number' />
+        </View>
+        <View style={{
+          flexDirection: 'row',
+          width: '100%',
+          height: 40,
+          marginTop: 5,
+          borderBottomWidth: 1,
+          borderBottomColor: 'black',
+          borderStyle: 'solid'
+        }}>
+          <TextInput style={{
+            width: '48%',
+            height: 40,
+            marginLeft: '1%',
+            marginRight: '1%'
+          }} value={this.state.restaurant.OpenTime} onChangeText={text => this.handleChange(text, 'OpenTime')} placeholder="Open time" />
+          <TextInput style={{
+            width: '48%',
+            height: 40,
+            marginLeft: '1%',
+            marginRight: '1%'
+          }} value={this.state.restaurant.CloseTime} onChangeText={text => this.handleChange(text, 'CloseTime')} placeholder="Close time" />
+        </View>
+      </View>
+      <TouchableOpacity style={{
+        width: 120,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        height: 50,
+        borderRadius: 20,
+        marginTop: 10,
+        backgroundColor: 'green',
+        marginBottom: 10
+      }} onPress={() => this.updateInfo()}>
+        <Text style={{
+          lineHeight: 50,
+          textAlign: 'center'
+        }}>Update</Text>
+      </TouchableOpacity>
+      <View style={{
+        width: '100%'
+      }}>
+        <View style={{
+          width: '100%',
+          height: 30,
+          backgroundColor: 'orange',
+          flexDirection: 'row',
+          marginBottom: 10
+        }}>
+          <Text style={{
+            lineHeight: 30,
+            fontSize: 18,
+            flexGrow: 1
+          }}>Menu</Text>
+          <TouchableOpacity onPress={() => this.setState({ visible: true })}>
+            <Icon name="plus" size={18} style={{
+              lineHeight: 30,
+              marginRight: 5
+            }} />
+          </TouchableOpacity>
+        </View>
+        <FlatList horizontal={true} data={this.state.menu} renderItem={({ item }) => <ItemList Name={item.Name} Price={item.Price} PhotoUrl={item.PhotoUrl} />} keyExtractor={(i, index) => index.toString()} />
+        <Modal transparent={true} visible={this.state.visible} animationType='slide' onRequestClose={() => this.setState({ visible: false })}>
           <View style={{
-              width: '100%',
-              height: 30,
-              backgroundColor: 'orange',
-              flexDirection: 'row',
-              marginBottom: 10
-            }}>
-            <Text style={{
-                lineHeight: 30,
-                fontSize: 18,
-                flexGrow: 1
-              }}>Menu</Text>
-            <TouchableOpacity onPress={() => this.setState({visible: true})}>
-              <Icon name="plus" size={18} style={{
-                  lineHeight: 30,
-                  marginRight: 5
-                }}/>
+            backgroundColor: 'white',
+            width: '80%',
+            height: HEIGHT /2,
+            top: this.state.modalTop,
+            left: '10%',
+            elevation: 5,
+            position: 'relative',
+            borderStyle: 'solid',
+            borderWidth: 1
+          }}>
+            <TouchableOpacity style={{
+              width: 24,
+              height: 24,
+              top: '2%',
+              right: '2%',
+              position: 'absolute',
+              backgroundColor: 'red',
+              borderRadius: 12,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }} onPress={() => this.setState({ visible: false })}>
+              <Icon name='times' size={20} color='white' />
             </TouchableOpacity>
-          </View>
-          <FlatList horizontal={true} data={this.state.menu} renderItem={({item}) => <ItemList Name={item.Name} Price={item.Price} PhotoUrl={item.PhotoUrl}/>} keyExtractor={(i, index) => index.toString()}/>
-          <Modal transparent={true} visible={this.state.visible} animationType='slide' onRequestClose={() => this.setState({visible: false})}>
-            <View style={{
-                backgroundColor: 'white',
-                width: '80%',
-                height: '50%',
-                top: '20%',
-                left: '10%',
-                elevation: 5,
-                position: 'relative',
-                borderStyle: 'solid',
-                borderWidth: 1
-              }}>
-              <TouchableOpacity style={{
-                  width: 24,
-                  height: 24,
-                  top: '2%',
-                  right: '2%',
-                  position: 'absolute',
-                  backgroundColor: 'red',
-                  borderRadius: 12,
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }} onPress={() => this.setState({visible: false})}>
-                <Icon name='times' size={20} color='white'/>
-              </TouchableOpacity>
-              <View style={{
-                  position: 'absolute',
-                  top: '10%',
-                  left: 0,
-                  width: '100%',
-                  height: '100%'
-                }}>
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '50%'
-                  }}>
-                  <View style={{
-                      position: 'absolute',
-                      width: '50%',
-                      height: '100%'
-                    }}>
-                    <TextInput placeholder='Name' style={{
-                        position: 'absolute',
-                        top: 0,
-                        width: '100%',
-                        height: 50,
-                        padding: 10
-                      }} onChangeText={text => this.setState({foodName: text})} value={this.state.foodName}/>
-                    <TextInput placeholder='Price' style={{
-                        position: 'absolute',
-                        top: 55,
-                        width: '100%',
-                        height: 50,
-                        padding: 10
-                      }} onChangeText={text => this.setState({foodPrice: text})} value={this.state.foodPrice}/>
-                  </View>
-                  <View style={{
-                      position: 'absolute',
-                      width: '50%',
-                      height: '100%',
-                      left: '50%'
-                    }}>
-                    {
-                      this.state.foodPhotoUrl && <View style={{
-                            width: '100%',
-                            top: 0
-                          }}>
-                          <Image source={{
-                              uri: this.state.foodPhotoUrl.uri
-                            }} style={{
-                              width: 120,
-                              height: 120
-                            }}/>
-                        </View>
-                    }
-                    {
-                      !this.state.foodPhotoUrl && <TouchableOpacity style={{
-                            width: 120,
-                            height: 50,
-                            top: '25%'
-                          }} onPress={() => this.pickImageFoodHandler()}>
-                          <Text style={{
-                              textAlign: 'center'
-                            }}>Picture</Text>
-                        </TouchableOpacity>
-                    }
-                  </View>
-                </View>
-                <TouchableOpacity style={{
-                    width: 120,
-                    height: 60,
-                    top: '55%',
-                    left: '50%',
-                    transform: [
-                      {
-                        translateX: -60
-                      }
-                    ]
-                  }} onPress={() => this.addFood()}>
-                  <Text style={{
-                      textAlign: 'center'
-                    }}>Add</Text>
+            <View style={{ flex: 1, padding: 5, marginTop: 28 }}>
+              <View style={{ flex: 3}}>
+                <TextInput style={Style.input} placeholder={"Tên món"} placeholderTextColor={'black'}/>
+                <TextInput style={Style.input} placeholder={"Giá tiền"} placeholderTextColor={'black'}/>
+              </View>
+              <View style={{ flex: 3, alignItems: 'center', justifyContent: "center" }}>
+                <TouchableOpacity>
+                  <Icon name='camera' size={35} />
+                </TouchableOpacity>
+              </View>
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity>
+                  <Text style={{borderWidth: 1, fontSize: 18, padding: 10, paddingLeft: 40, paddingRight: 40, borderRadius: 50, backgroundColor: 'orange'}}>Add</Text>
                 </TouchableOpacity>
               </View>
             </View>
-          </Modal>
-        </View>
-      </View>)
-    }
+          </View>
+        </Modal>
+      </View>
+    </View>)
   }
+}
 
-  const ItemList = ({Name, Price, PhotoUrl}) => (<ImageBackground source={{
-      uri: PhotoUrl
-    }} style={{
-      width: 200,
-      height: 150,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }} imageStyle={{
-      width: 150,
-      height: 150,
-      left: 25
-    }}>
-    <View style={{
-        width: 150
-      }}>
-      <Text style={{
-          fontSize: 20,
-          color: 'white',
-          textAlign: 'center'
-        }}>{Name}</Text>
-      <Text style={{
-          fontSize: 16,
-          color: 'white',
-          textAlign: 'center'
-        }}>{Price}</Text>
-    </View>
-  </ImageBackground>)
+const ItemList = ({ Name, Price, PhotoUrl }) => (<ImageBackground source={{
+  uri: PhotoUrl
+}} style={{
+  width: 200,
+  height: 150,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center'
+}} imageStyle={{
+  width: 150,
+  height: 150,
+  left: 25
+}}>
+  <View style={{
+    width: 150
+  }}>
+    <Text style={{
+      fontSize: 20,
+      color: 'white',
+      textAlign: 'center'
+    }}>{Name}</Text>
+    <Text style={{
+      fontSize: 16,
+      color: 'white',
+      textAlign: 'center'
+    }}>{Price}</Text>
+  </View>
+</ImageBackground>)
 
-  const Style = StyleSheet.create({
-    container: {
-      width: '100%',
-      height: '100%'
-    }
-  })
+const Style = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%'
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.4)',
+    color: 'black',
+    marginTop: 10
+  }
+})

@@ -32,7 +32,7 @@ export default class App extends Component {
           <Scene key='Login' component={Login}/>
           <Scene key='Dashboard' component={Dashboard} initial/>
           <Scene key='Detail' component={Detail}/>
-          <Scene key='OrderDetail' component={OrderDetail} />
+          <Scene key='OrderDetail' component={OrderDetail} title="Danh sách các món" hideNavBar={false}/>
         </Stack>
       </Router>
     </Provider>);

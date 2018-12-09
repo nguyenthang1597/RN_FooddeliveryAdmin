@@ -3,10 +3,6 @@ import {View, FlatList, Text, Image, ActivityIndicator, Dimensions, TouchableOpa
 import {Actions} from 'react-native-router-flux'
 const {width: WIDTH, height: HEIGHT} = Dimensions.get('window')
 
-
-
-
-
 export default class RestaurantList extends Component {
   componentDidMount(){
     this.props.getRestaurants(1, 10);
