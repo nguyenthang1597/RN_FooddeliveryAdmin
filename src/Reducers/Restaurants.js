@@ -17,14 +17,14 @@ export default (state = initState, action) => {
     case LOADMORE_RESTAURANT:
       return {...state, loadmore: true}
     case REFRESH_RESTAURANT:
-      return {...state, refresh: true}
+      return {...state, refresh: true, page: 1}
     case REQUEST_LOADMORE:
       return {...state, loadmore: true}
     case RECEIVE_LOADMORE:
       if(action.data.length)
-        return {...state, restaurants: [...state.restaurants, ...action.data], page: state.page + 1}
+        return {...state, restaurants: [...state.restaurants, ...action.data], page: state.page + 1, loadmore: false}
       else
-        return state;
+        return {...state, loadmore: false};
     default:
       return state;
   }

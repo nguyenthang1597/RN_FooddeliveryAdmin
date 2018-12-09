@@ -5,7 +5,8 @@ import SideNav from './SideNav';
 import RestaurantList from '../Containers/Restaurants';
 import FormAddRestaurant from './Admin/Restaurant/FormAddRestaurant'
 import OrderList from './Admin/Order/List';
-import CategoryList from './Admin/Category/List'
+import CategoryList from './Admin/Category/List';
+import AdmimDashboard from './Admin/Dashboard'
 export default class Dashboard extends Component {
   state = {
     open: false,
@@ -20,6 +21,9 @@ export default class Dashboard extends Component {
       <View style={{flex: 1, position: 'relative', zIndex: 0}}>
         <TopBar sideMenu={this.sideMenu}/>
         <SideNav open={this.state.open} setComponent={this.setComponent}/>
+        {
+          this.state.component === '' && <AdmimDashboard />
+        }
         {
           this.state.component === 'Restaurant_List' && <RestaurantList/>
         }
