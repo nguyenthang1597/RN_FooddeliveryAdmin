@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {View, FlatList, Text, Image, ActivityIndicator, Dimensions, TouchableOpacity, RefreshControl} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 const {width: WIDTH, height: HEIGHT} = Dimensions.get('window')
-
+import PushNotification from 'react-native-push-notification';
 export default class RestaurantList extends Component {
   componentDidMount(){
     this.props.getRestaurants(1, 10);

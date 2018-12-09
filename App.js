@@ -14,6 +14,10 @@ const logger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 import OrderDetail from './src/Components/Admin/Order/Detail';
 import PushNotification from 'react-native-push-notification';
+
+import DeliverDashboard from './src/Components/DeliverDashboard'
+
+
 var config = {
   appId: "1:413834109009:android:0146280af0ce712c",
   apiKey: "AIzaSyCaswdFpvrdHXcsnq2Q7mRqjuWIgiFgyCI",
@@ -35,6 +39,7 @@ export default class App extends Component {
         <Stack key='root' hideNavBar={true}>
           <Scene key='Login' component={Login} initial/>
           <Scene key='Dashboard' component={Dashboard} />
+          <Scene key='DeliverDashboard' component={DeliverDashboard} />
           <Scene key='DeliverOderList' component={DeliverOrderList} />
           <Scene key='Detail' component={Detail}/>
           <Scene key='OrderDetail' component={OrderDetail} title="Danh sách các món" hideNavBar={false}/>

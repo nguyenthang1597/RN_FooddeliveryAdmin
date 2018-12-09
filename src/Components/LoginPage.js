@@ -16,7 +16,11 @@ export default class LoginPage extends Component {
   onSubmit = () => this.props.authenticate(this.state.username, this.state.password)
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.isAuthenticated){
+    if(nextProps.isAuthenticated && this.props.token){
+      let data = jwt_decode(this.props.token);
+      if(data.Role === 0)
+        Actions.DeliverDashboard({type:'reset'});
+      else
         Actions.Dashboard({type:'reset'})
     }
   }

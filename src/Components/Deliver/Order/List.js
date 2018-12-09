@@ -56,9 +56,9 @@ export default class DeliverOderList extends Component {
 const ListItem = ({ item }) =>
     <TouchableOpacity style={{ flex: 1, flexDirection: "row", marginTop: 7, marginLeft: 5, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.3)', marginBottom: 5 }} onPress={() => Actions.push('DeliverOrderDetail', { id: item.Id })}>
         <View style={{ flex: 3 }}>
-            <Text style={styles.orderText}>{item.Name}</Text>
-            <Text style={styles.orderText}>{item.District} - {item.Ward} - {item.Street} - {item.Number}</Text>
-            <Text style={styles.orderText}>{moment(item.BookAt).format('hh:mm:ss - DD/MM/YYYY')}</Text>
+            <Text style={styles.orderText}>Người đặt hàng: {item.Name}</Text>
+            <Text numberOfLines={2} style={styles.orderText}>Địa chỉ: {item.Number}, {item.Street}, {item.Ward}, {item.District} </Text>
+            <Text style={styles.orderText}>{moment(item.BookAt).format('HH:mm:ss - DD/MM/YYYY')}</Text>
         </View>
     </TouchableOpacity>
 

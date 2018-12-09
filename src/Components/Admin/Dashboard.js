@@ -17,9 +17,6 @@ class AdmimDashboard extends React.Component {
     loading: true
   }
   async componentDidMount() {
-
-
-
     Promise.all([CountRestaurant(), CountFood(), CountByCategory(), CountOrder(), CountOrderByState()]).then(res => this.setState({totalRes: res[0].count, totalFood: res[1].count, totalByCategory: res[2], totalOrder: res[3].count, totalByState: res[4], loading: false}))
   }
   render () {
