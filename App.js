@@ -33,9 +33,9 @@ export default class App extends Component {
     return (<Provider store={store}>
       <Router>
         <Stack key='root' hideNavBar={true}>
-          <Scene key='Login' component={Login}/>
+          <Scene key='Login' component={Login} initial/>
           <Scene key='Dashboard' component={Dashboard} />
-          <Scene key='DeliverOderList' component={DeliverOrderList} initial/>
+          <Scene key='DeliverOderList' component={DeliverOrderList} />
           <Scene key='Detail' component={Detail}/>
           <Scene key='OrderDetail' component={OrderDetail} title="Danh sách các món" hideNavBar={false}/>
           <Scene key='DeliverOrderDetail' component={DeliverOrderDetail} title="Chi tiết đơn hàng" hideNavBar={false}/>
