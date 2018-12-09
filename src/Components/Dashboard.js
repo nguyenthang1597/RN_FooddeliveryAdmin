@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {View} from 'react-native'
-import TopBar from './TopBar';
-import SideNav from '../Containers/SideNav';
+import TopBar from '../Containers/TopBar';
+import SideNav from './SideNav';
 import RestaurantList from '../Containers/Restaurants';
 import FormAddRestaurant from './Admin/Restaurant/FormAddRestaurant'
 import OrderList from './Admin/Order/List';

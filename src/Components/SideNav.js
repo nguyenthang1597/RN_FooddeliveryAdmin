@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import {Actions} from 'react-native-router-flux'
 const SideNav  = ({setComponent, open, logout}) => {
   return (
-    <View style={{position: 'absolute', top: 40, left: 0,backgroundColor: '#6200EE', width: open ? '50%' : 0, height: open ? '100%' : 0, zIndex: 99, borderTopWidth: 1, borderTopColor: 'white'}}>
+    <View style={{position: 'absolute', top: 50, left: 0,backgroundColor: '#6200EE', width: open ? '65%' : 0, height: open ? '100%' : 0, zIndex: 99, borderTopWidth: 1, borderTopColor: 'white'}}>
         <Item title='Restaurant'>
             <SubItem title={'List'} onPress={() => setComponent('Restaurant_List')}/>
             <SubItem title={'Add new'} onPress={() => setComponent('Restaurant_Add')}/>
@@ -15,9 +14,6 @@ const SideNav  = ({setComponent, open, logout}) => {
         <Item title='Order'>
           <SubItem title='List' onPress={() => setComponent('Order_List')} />
         </Item>
-        <TouchableOpacity  style={{position: 'relative', bottom: 0, top: '70%'}} onPress={() => {logout(); Actions.Login({type: "reset"})}}>
-          <Text style={{marginLeft: 10, fontSize: 20, color: 'white'}}>Đăng xuất</Text>
-        </TouchableOpacity>
     </View>
   )
 }
@@ -52,5 +48,5 @@ class Item extends Component {
 }
 
 const SubItem = ({title, onPress}) => {
-  return <TouchableOpacity onPress={onPress} style={{marginTop: 5, marginBottom: 5}}><Text style={{fontSize: 16}}>{title}</Text></TouchableOpacity>
+  return <TouchableOpacity onPress={onPress} style={{marginTop: 5, marginBottom: 5}}><Text style={{fontSize: 18, color: 'white'}}>{title}</Text></TouchableOpacity>
 }
