@@ -18,11 +18,11 @@ export default class RestaurantList extends Component {
   }
 
   loadData = async () => {
-    let res = await fetch(`https://fooddeliveryadmin.herokuapp.com/order/getAll`);
+    let res = await fetch(`https://fooddeliveryadmin.herokuapp.com/order/list`);
     let data = await res.json();
     this.setState({
       loading: false,
-      orders: data,
+      orders: data.data,
       refreshing: false,
     })
   }
@@ -61,7 +61,7 @@ const ListItem = ({ item }) =>
     </View>
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Icon name='truck' size={30}  color= {item.State === 0 ? 'red' : item.State === 1 ? 'yellow' : 'green'}/>
-      <Text style= {[styles.orderText, {marginTop: 5}]}>{item.State === 0 ? 'Đang chờ' : item.State === 1 ? 'Đang giao' : 'Đã nhận'}</Text> 
+      <Text style= {[styles.orderText, {marginTop: 5}]}>{item.State === 0 ? 'Đang chờ' : item.State === 1 ? 'Đang giao' : 'Đã nhận'}</Text>
     </View>
 
 

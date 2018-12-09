@@ -4,6 +4,9 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 const SideNav  = ({setComponent, open, logout}) => {
   return (
     <View style={{position: 'absolute', top: 50, left: 0,backgroundColor: '#6200EE', width: open ? '65%' : 0, height: open ? '100%' : 0, zIndex: 99, borderTopWidth: 1, borderTopColor: 'white'}}>
+        <Item title='Trang chính' onPress={() => setComponent('')}>
+
+        </Item>
         <Item title='Restaurant'>
             <SubItem title={'List'} onPress={() => setComponent('Restaurant_List')}/>
             <SubItem title={'Add new'} onPress={() => setComponent('Restaurant_Add')}/>
@@ -33,7 +36,7 @@ class Item extends Component {
     const {title} = this.props;
     return (
       <View style={{ position: 'relative', marginTop: 10, marginLeft: 10}}>
-        <TouchableOpacity style={{flexDirection: 'row', display: 'flex'}} onPress={this.onClick}>
+        <TouchableOpacity style={{flexDirection: 'row', display: 'flex'}} onPress={() => this.props.children ? this.onClick() : this.props.onPress()}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>{title}</Text>
           {
             this.props.children ? this.state.click ? <Icon name='minus' size={20} style={{ left: 10, top: 5 }} color='white'/> : <Icon name='plus' size={20} style={{ left: 10, top: 5 }} color='white'/> : null

@@ -167,13 +167,18 @@ class FormAddRestaurant extends Component {
                 </View>
 
                 <Text style={styles.title}>Hình ảnh: </Text>
-                <TouchableOpacity style={{ height: 45, width: 145, backgroundColor: '#5E35B1', borderRadius: 50, justifyContent: 'center', alignItems: "center", marginLeft: 'auto', marginRight: 'auto' }} onPress={() => this.pickImageHandler()}>
-                    <Text style={{color: 'white', fontSize: 16}}>Chọn hình</Text>
-                </TouchableOpacity>
                 {
-                  this.state.pickedImage && <Image style={{height: 200, borderRadius: 10, marginTop: 10 }} source={{uri: this.state.pickedImage.uri}}/>
+                  !this.state.pickedImage && <TouchableOpacity style={{ height: 45, width: 145, backgroundColor: '#5E35B1', borderRadius: 50, justifyContent: 'center', alignItems: "center", marginLeft: 'auto', marginRight: 'auto' }} onPress={() => this.pickImageHandler()}>
+                      <Text style={{color: 'white', fontSize: 16}}>Chọn hình</Text>
+                  </TouchableOpacity>
                 }
-                <TouchableOpacity style={{ height: 45, width: 146, backgroundColor: '#5E35B1', borderRadius: 50, justifyContent: 'center', alignItems: "center", marginLeft: 'auto', marginRight: 'auto', bottom: 5, position: 'absolute', left: '50%', transform: [{translateX: -73}] }} onPress={() => this.handleSubmit()}>
+                {
+                  this.state.pickedImage && <TouchableOpacity onPress={() => this.pickImageHandler()}><Image style={{height: 180, borderRadius: 10, marginTop: 10, marginBottom: 10 }} source={{uri: this.state.pickedImage.uri}}/></TouchableOpacity>
+                }
+                {
+                  !this.state.pickedImage && <View style={{height: 180}}></View>
+                }
+                <TouchableOpacity style={{ height: 45, width: 146, backgroundColor: '#5E35B1', borderRadius: 50, justifyContent: 'center', alignItems: "center", marginLeft: 'auto', marginRight: 'auto', bottom: 5}} onPress={() => this.handleSubmit()}>
                     <Text style={{color: 'white', fontSize: 16}}>Thêm mới</Text>
                 </TouchableOpacity>
             </View>
@@ -192,7 +197,7 @@ const styles = StyleSheet.create({
         borderBottomColor: 'rgba(0,0,0,0.6)',
         width: '100%',
         marginLeft: 10,
-        height: 50
+        height: 40
     },
     districtStyle: {
         flex: 1,

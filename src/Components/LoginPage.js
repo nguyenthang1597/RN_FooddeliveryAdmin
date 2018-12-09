@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, ImageBackground, TextInput, TouchableOpacity } 
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import loginBackground from '../Images/loginBackground.png'
 import {Actions} from 'react-native-router-flux'
+import jwt_decode from 'jwt-decode'
 export default class LoginPage extends Component {
   constructor(props){
     super(props);
@@ -15,8 +16,9 @@ export default class LoginPage extends Component {
   onSubmit = () => this.props.authenticate(this.state.username, this.state.password)
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.isAuthenticated)
-      Actions.Dashboard({type: "reset"})
+    if(nextProps.isAuthenticated){
+        Actions.Dashboard({type:'reset'})
+    }
   }
 
   componentDidMount() {
@@ -24,6 +26,7 @@ export default class LoginPage extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <ImageBackground source={loginBackground} style={{ width: '100%', height: '100%' }}>
         <View style={style.loginContainer}>
