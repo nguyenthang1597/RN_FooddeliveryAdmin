@@ -25,9 +25,11 @@ var config = {
 };
 firebase.initializeApp(config);
 
-import DeliverOrderList from './src/Components/Deliver/Order/List'
-import DeliverOrderDetail from './src/Components/Deliver/Order/Detail'
 
+import DeliverDashboard from './src/Components/DeliverDashboard'
+import DeliverOrderList from './src/Components/Deliver/Order/List'
+import DeliverOrderDetail from './src/Containers/DOrderDetail'
+import MyOrderDetail from './src/Components/Deliver/Order/MyOrderDetail'
 export default class App extends Component {
   render() {
     return (<Provider store={store}>
@@ -35,10 +37,11 @@ export default class App extends Component {
         <Stack key='root' hideNavBar={true}>
           <Scene key='Login' component={Login} initial/>
           <Scene key='Dashboard' component={Dashboard} />
-          <Scene key='DeliverOderList' component={DeliverOrderList} />
+          <Scene key='DeliverDashboard' component={DeliverDashboard} />
           <Scene key='Detail' component={Detail}/>
           <Scene key='OrderDetail' component={OrderDetail} title="Danh sách các món" hideNavBar={false}/>
           <Scene key='DeliverOrderDetail' component={DeliverOrderDetail} title="Chi tiết đơn hàng" hideNavBar={false}/>
+          <Scene key='MyDeliverOrderDetail' component={MyOrderDetail} title="Chi tiết đơn hàng" hideNavBar={false}/>
         </Stack>
       </Router>
     </Provider>);

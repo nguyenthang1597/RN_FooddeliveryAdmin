@@ -15,6 +15,8 @@ import {
   Keyboard,
   Dimensions,
 } from 'react-native'
+import UpdateFood from '../../../API/UpdateFood'
+import Delete from '../../../API/Delete'
 import ImagePicker from "react-native-image-picker";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import RNFetchBlob from 'react-native-fetch-blob'
@@ -41,6 +43,7 @@ export default class Detail extends Component {
       foodName: null,
       foodPrice: null,
       foodPhotoUrl: null,
+      foodId: null,
       id: props.navigation.state.params.id,
       modalTop: '20%',
       isAddFood: false,
@@ -243,34 +246,66 @@ export default class Detail extends Component {
   }
 
   DeleteRestaurant = () => {
-    // Xu ly xoa nha hang
+    Delete(this.state.id, 'restaurant')
+    .then(res => {
+      if(res.status!==200)
+        alert('Đánh dấu xoá không thành công');
+      else
+        alert('Đánh dấu xoá thành công');
+    })
   }
 
-  handleItemFoodClick = (Name, Price, urlImage) => {
-    this.setState( {
+  handleItemFoodClick = (Name, Price, urlImage, id) => {
+    this.setState({
       showDialogEditFood: true,
       editName: Name,
       editPrice: Price,
       editPhoToURL: urlImage,
-    })
+      foodId: id
+    }, () => console.log(this.state))
   }
 
   UpdateInfoFood = () => {
     let foodName = this.state.editName;
     let foodPrice = this.state.editPrice;
     let foodImage;
-
+    let _foodPhotoUrl;
     if (this.state.editPhotoPicked !== null) {
       foodImage = this.state.editPhotoPicked.uri;
     }
     else {
       foodImage = this.state.editPhoToURL;
     }
-    alert(foodName + foodPrice + foodImage)
+
+    if(this.state.editPhotoPicked !== null)
+      UploadPicture(foodImage)
+      .then(url => {
+        return UpdateFood(this.state.foodId, foodName, url, foodPrice)
+      }).then(res =>{
+        if(res.status !== 200)
+          alert('Không thành công');
+        else
+          alert('Thành công')
+      })
+    else {
+      UpdateFood(this.state.foodId, foodName, foodImage, foodPrice)
+      .then(res =>{
+        if(res.status !== 200)
+          alert('Không thành công');
+        else
+          alert('Thành công')
+      })
+    }
   }
 
   DeleteFood = () => {
-
+    Delete(this.state.foodId, 'food')
+    .then(res => {
+      if(res.status!==200)
+        alert('Đánh dấu xoá không thành công');
+      else
+        alert('Đánh dấu xoá thành công');
+    })
   }
 
   handleDistrictChange = async (value) => {
@@ -453,7 +488,7 @@ export default class Detail extends Component {
             }} />
           </TouchableOpacity>
         </View>
-        <FlatList horizontal={true} data={this.state.menu} renderItem={({ item }) => <ItemList Name={item.Name} Price={item.Price} PhotoUrl={item.PhotoUrl}  handleItemFoodClick = {() => this.handleItemFoodClick(item.Name, item.Price, item.PhotoUrl)}/>} keyExtractor={(i, index) => index.toString()} />
+        <FlatList horizontal={true} data={this.state.menu} renderItem={({ item }) => <ItemList Name={item.Name} Price={item.Price} PhotoUrl={item.PhotoUrl}  handleItemFoodClick = {() => this.handleItemFoodClick(item.Name, item.Price, item.PhotoUrl, item.Id)}/>} keyExtractor={(i, index) => index.toString()} />
         <Modal transparent={true} visible={this.state.visible} animationType='slide' onRequestClose={() => this.setState({ visible: false })}>
           <View style={{
             justifyContent: 'center',
@@ -534,7 +569,7 @@ export default class Detail extends Component {
               <View style={{ flex: 1, padding: 5, marginTop: 28 }}>
                 <View style={{ flex: 3 }}>
                   <TextInput style={Style.input} placeholder={"Tên món"} placeholderTextColor={'black'} onChangeText={(value) => this.setState({ editName: value })} value={this.state.editName}/>
-                  <TextInput style={Style.input} placeholder={"Giá tiền"} placeholderTextColor={'black'} onChangeText={(value) => this.setState({ editPrice: value })}  value ={this.state.editPrice}/>
+                  <TextInput style={Style.input} placeholder={"Giá tiền"} placeholderTextColor={'black'} onChangeText={(value) => this.setState({ editPrice: value })} value={this.state.editPrice.toString()}/>
                 </View>
                 <View style={{ flex: 3, alignItems: 'center', justifyContent: "center" }}>
                   <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => this.DialogEditFoodPickImage()} >

@@ -1,34 +1,41 @@
 import React from 'react'
 import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native'
-import AcceptOrder from '../../../API/AcceptOrder'
+import OrderReceived from '../../../API/OrderReceived'
 import {Actions} from 'react-native-router-flux'
-class DeliverOrderDetail extends React.Component {
+class MyOrderDetail extends React.Component {
     state = {
         loading: true,
-        data: []
+        data: [],
+        state: null
     }
 
     async componentDidMount() {
-        let res = await fetch(`https://fooddeliveryadmin.herokuapp.com/order/detail?id=${this.props.id}`)
+        console.log(this.props.id);
+        let res = await fetch(`https://fooddeliveryadmin.herokuapp.com/order/detail?id=${this.props.id}`);
+
         let data = await res.json();
+        console.log(data);
+        let res2 = await fetch(`https://fooddeliveryadmin.herokuapp.com/order/${this.props.id}/state`)
+        let data2 = await res2.json()
         this.setState({
             loading: false,
-            data
+            data,
+            state: data2.State
         })
     }
     accept = () => {
-      AcceptOrder(this.props.id, this.props.token).then(res => {
+      OrderReceived(this.props.id).then(res => {
         if(res.status === 200){
           Alert.alert(
             'Thành công',
-            'Nhận đơn hàng thành công'
+            'Xác nhận giao hàng thành công'
           )
           Actions.DeliverDashboard({type: 'reset'});
         }
         else {
           Alert.alert(
             'Thất bại',
-            'Nhận đơn hàng thất bại'
+            'Xác nhận giao hàng thất bại'
           )
         }
       })
@@ -62,9 +69,11 @@ class DeliverOrderDetail extends React.Component {
                         {tongHoaDon} VND
             </Text>
                 </View>
-                <TouchableOpacity style={{backgroundColor: 'orange',marginBottom: 5, justifyContent: 'center', alignItems: 'center', height: 50, width: '100%', borderRadius: 15}} onPress={() => this.accept()}>
-                    <Text style={{ fontSize: 20, color: 'white' }}>Nhận đơn hàng này</Text>
-                </TouchableOpacity>
+                {
+                  this.state.state !== 2 && <TouchableOpacity style={{backgroundColor: 'orange',marginBottom: 5, justifyContent: 'center', alignItems: 'center', height: 50, width: '100%', borderRadius: 15}} onPress={() => this.accept()}>
+                      <Text style={{ fontSize: 20, color: 'white' }}>Xác nhận đã giao</Text>
+                  </TouchableOpacity>
+                }
             </View>
         )
     }
@@ -98,4 +107,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default DeliverOrderDetail;
+export default MyOrderDetail;
