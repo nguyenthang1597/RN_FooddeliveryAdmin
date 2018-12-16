@@ -1,9 +1,10 @@
 import {connect} from 'react-redux';
 import authenticate from '../Actions/Authentication'
 import LoginPage from '../Components/LoginPage'
-const mapStateToProps = ({Authentication: {isAuthenticated, token}}) => ({
+const mapStateToProps = ({Authentication: {isAuthenticated, token, isAuthenticating}}) => ({
   isAuthenticated,
-  token
+  token,
+  isAuthenticating
 })
 
 const mapDispatchToProps = dispatch => ({

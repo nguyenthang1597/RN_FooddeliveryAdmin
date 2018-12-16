@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, ImageBackground, TextInput, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, Text, ImageBackground, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import loginBackground from '../Images/loginBackground.png'
 import {Actions} from 'react-native-router-flux'
@@ -42,9 +42,10 @@ export default class LoginPage extends Component {
               <Icon name="key" size={25} style={{ position: 'absolute', left: 20, top: 5 }} />
             </View>
             </View>
+            {this.props.isAuthenticating ? <ActivityIndicator size={"large"} color={'black'} style={{marginTop: 5}}/>:
             <TouchableOpacity style={{ position: 'relative', marginTop: 30, width: '40%', height: 30, marginLeft: 'auto', marginRight: 'auto', backgroundColor: 'pink', borderRadius: 15}} onPress={() => this.onSubmit()}>
               <Text style={{textAlign: 'center', fontSize: 20, fontWeight: '500'}}>Login</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
           </View>
         </View>
       </ImageBackground>
