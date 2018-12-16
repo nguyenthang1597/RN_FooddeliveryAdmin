@@ -39,7 +39,7 @@ export default class Dashboard extends Component {
         {
           this.state.component === 'Order_List' && <DeliverOderList/>
         }
-      
+
       </View>
     )
   }

@@ -30,7 +30,7 @@ var config = {
 firebase.initializeApp(config);
 
 import DeliverOrderList from './src/Components/Deliver/Order/List'
-import DeliverOrderDetail from './src/Components/Deliver/Order/Detail'
+import DeliverOrderDetail from './src/Containers/DOrderDetail'
 
 export default class App extends Component {
   render() {
@@ -40,7 +40,6 @@ export default class App extends Component {
           <Scene key='Login' component={Login} initial/>
           <Scene key='Dashboard' component={Dashboard} />
           <Scene key='DeliverDashboard' component={DeliverDashboard} />
-          <Scene key='DeliverOderList' component={DeliverOrderList} />
           <Scene key='Detail' component={Detail}/>
           <Scene key='OrderDetail' component={OrderDetail} title="Danh sách các món" hideNavBar={false}/>
           <Scene key='DeliverOrderDetail' component={DeliverOrderDetail} title="Chi tiết đơn hàng" hideNavBar={false}/>

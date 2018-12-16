@@ -48,6 +48,11 @@ export default class DeliverOderList extends Component {
                         keyExtractor={(item, index) => index.toString()}
                     />
                 }
+                {
+                  !this.state.loading && !this.state.orders.length && <View>
+                    <Text>Không có đơn hàng nào hiện tại</Text>
+                  </View>
+                }
             </View>
         )
     }

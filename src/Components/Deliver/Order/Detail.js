@@ -1,6 +1,7 @@
 import React from 'react'
-import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native'
-
+import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native'
+import AcceptOrder from '../../../API/AcceptOrder'
+import {Actions} from 'react-native-router-flux'
 class DeliverOrderDetail extends React.Component {
     state = {
         loading: true,
@@ -15,8 +16,27 @@ class DeliverOrderDetail extends React.Component {
             data
         })
     }
+
+    accept = () => {
+      AcceptOrder(this.props.id, this.props.token).then(res => {
+        if(res.status === 200){
+          Alert.alert(
+            'Thành công',
+            'Nhận đơn hàng thành công'
+          )
+          Actions.DeliverDashboard({type: 'reset'});
+        }
+        else {
+          Alert.alert(
+            'Thất bại',
+            'Nhận đơn hàng thất bại'
+          )
+        }
+      })
+    }
+
     render() {
-        console.log(this.state);
+        console.log(this.props);
         let tongHoaDon = 0;
         if (this.state.data.length != 0) {
             for (let i = 0; i < this.state.data.length; i++) {
@@ -44,7 +64,7 @@ class DeliverOrderDetail extends React.Component {
                         {tongHoaDon} VND
             </Text>
                 </View>
-                <TouchableOpacity style={{backgroundColor: 'orange',marginBottom: 5, justifyContent: 'center', alignItems: 'center', height: 50, width: '100%', borderRadius: 15}}>
+                <TouchableOpacity style={{backgroundColor: 'orange',marginBottom: 5, justifyContent: 'center', alignItems: 'center', height: 50, width: '100%', borderRadius: 15}} onPress={() => this.accept()}>
                     <Text style={{ fontSize: 20, color: 'white' }}>Nhận đơn hàng này</Text>
                 </TouchableOpacity>
             </View>
