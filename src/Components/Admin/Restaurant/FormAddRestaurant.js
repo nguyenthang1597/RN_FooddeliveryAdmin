@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Picker, Alert } from 'react-native';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Picker, Alert, ActivityIndicator } from 'react-native';
 import ImagePicker from "react-native-image-picker";
 
 import UploadPicture from '../../../API/UploadPicture'
@@ -19,7 +19,8 @@ class FormAddRestaurant extends Component {
             PhotoUrl: '',
             Districts: [],
             Wards: [],
-            pickedImage: null
+            pickedImage: null,
+            isAddNewRestaurant: false
         };
     }
 
@@ -57,6 +58,9 @@ class FormAddRestaurant extends Component {
       if(!valid)
         Alert.alert('Error', 'Vui long nhap day du thong tin')
       else{
+        this.setState({
+          isAddNewRestaurant: true
+        })
         return UploadPicture(this.state.pickedImage.uri)
         .then(url => {
           let restaurant = {
@@ -71,11 +75,14 @@ class FormAddRestaurant extends Component {
           return AddRestaurant(restaurant);
         })
         .then(res => {
+          this.setState({
+            isAddNewRestaurant: false,
+          })
           if(res.status !== 200){
-            Alert('Thêm không thành công');
+            alert('Thêm không thành công');
           }
           else{
-            Alert('Thêm thành công');
+            alert('Thêm thành công');
           }
         })
       }
@@ -178,9 +185,10 @@ class FormAddRestaurant extends Component {
                 {
                   !this.state.pickedImage && <View style={{height: 180}}></View>
                 }
+                {this.state.isAddNewRestaurant ? <ActivityIndicator size="large" color={'black'}/> :
                 <TouchableOpacity style={{ height: 45, width: 146, backgroundColor: '#5E35B1', borderRadius: 50, justifyContent: 'center', alignItems: "center", marginLeft: 'auto', marginRight: 'auto', bottom: 5}} onPress={() => this.handleSubmit()}>
                     <Text style={{color: 'white', fontSize: 16}}>Thêm mới</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
         );
     }
